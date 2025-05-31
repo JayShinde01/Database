@@ -49,4 +49,69 @@ where gpa>3.5;
 select city,avg(gpa) from students s Join profile p on s.student_id=p.student_id
 group by city;
 
-group by city;
+
+
+
+
+
+
+
+use jay;
+create table books(
+book_id int,
+title varchar(255),
+genre varchar(255),
+author_id int ,
+foreign key (author_id) references authors(author_id)
+);
+
+create table authors(
+author_id int primary key auto_increment,
+name varchar(255),
+country varchar(255)
+);
+insert into authors(name,country)values
+("J.K","UK"),("george","UK"),("mark","USA"),("haruki","Japan");
+insert into books(book_id,title,genre,author_id)values
+(101,"harry porter and scorer stone","fantasy",1),
+(102,"harry porter and chamber secrete","fantasy",1),
+(103,"1984","dystopian",2),
+(104,"animal farm","satire",2),
+(105,"adventures","fiction",3),
+(106,"wood","romance",4),
+(101,"shore","magical realism",4),
+(101,"bird cronical","fiction",4);
+select * from books;
+select * from authors;
+
+-- 1. How many books has each author written?
+select count(*) from books b Join authors  a on b.author_id=a.author_id group by name;
+
+-- 2. List the titles of books written by Haruki Murakami.
+select title,name  from books b Join authors  a on b.author_id=a.author_id where name="haruki";
+
+-- 3. Which authors have written more than one book?
+select count(*) as c,name  from books b Join authors  a on b.author_id=a.author_id group by name having c >1;
+
+-- 4. List all authors and the genres they have written.
+select genre  from books b Join authors  a on b.author_id=a.author_id group by genre;		
+
+-- 5. How many different genres has each author written in?
+select genre  from books b Join authors  a on b.author_id=a.author_id group by genre  ;	
+
+-- 6. Which author has written the most books?
+select count(*)as c  from books b Join authors  a on b.author_id=a.author_id group by name order by c desc limit 1;	
+
+-- 7. List all books along with their author’s name and country.
+select title,name,country from books b left Join authors  a on b.author_id=a.author_id ;
+
+-- 8. Which authors have written books in the genre ‘Fiction’?
+select title,name,genre from books b  Join authors  a on b.author_id=a.author_id where genre="fiction";
+
+-- 9. Find the number of books written by UK authors.
+select count(*),country from books b  Join authors  a on b.author_id=a.author_id group by country having country="uk";
+
+-- 10. List authors who have written books in more than one genre.
+select count(*) from books b left Join authors  a on b.author_id=a.author_id where (
+select distinct  name,genre from books b left Join authors  a on b.author_id=a.author_id   
+)  ;
